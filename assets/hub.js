@@ -55,21 +55,22 @@ const GAMES = [
     url: "games/sort/index.html"
   },
   {
-  id: "color-catch",
-  title: "Renkleri Yakala",
-  desc: "Renkleri yakalamaya çalış",
-  icon: "🎯",
-  badge: "4+",
-  url: "games/color-catch/index.html"
-},  
-  {
   id: "balloon",
   title: "Balon Patlat",
-  desc: "Balonları dokunarak patlat",
-  icon: "🧠",
+  desc: "Balonlara dokun, patlat ve puan kazan!",
+  icon: "🎈",
   badge: "4+",
   url: "games/balloon/index.html"
+},
+{
+  id: "color-catch",
+  title: "Renk Yakala",
+  desc: "Ortadaki renkle aynı butona bas!",
+  icon: "🟦",
+  badge: "4+",
+  url: "games/color-catch/index.html"
 }
+
   // Buraya yeni oyun ekledikçe bir obje daha ekleyeceksin.
 ];
 
@@ -127,5 +128,6 @@ btnSound.addEventListener("click", async () => {
 
 render();
 showToast("Bir oyun seç 🎮");
+
 
 
