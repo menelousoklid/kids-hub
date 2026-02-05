@@ -55,12 +55,20 @@ const GAMES = [
     url: "games/sort/index.html"
   },
   {
-  id: "yeni-oyun",
-  title: "Yeni Oyun",
-  desc: "Kısa açıklama",
+  id: "color-catch",
+  title: "Renkleri Yakala",
+  desc: "Renkleri yakalamaya çalış",
   icon: "🎯",
   badge: "4+",
-  url: "games/yeni-oyun/index.html"
+  url: "games/color-catch/index.html"
+},  
+  {
+  id: "balloon",
+  title: "Balon Patlat",
+  desc: "Balonları dokunarak patlat",
+  icon: "🧠",
+  badge: "4+",
+  url: "games/balloon/index.html"
 }
   // Buraya yeni oyun ekledikçe bir obje daha ekleyeceksin.
 ];
@@ -119,4 +127,5 @@ btnSound.addEventListener("click", async () => {
 
 render();
 showToast("Bir oyun seç 🎮");
+
 
