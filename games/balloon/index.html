@@ -1,1 +1,338 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <title>Balon Patlat</title>
+  <style>
+    :root{--bg:#0f1220;--text:#f2f5ff;--muted:#aab3d6;--shadow:0 10px 30px rgba(0,0,0,.35);--radius:18px;}
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1200px 900px at 20% 10%, #1a1f43 0%, var(--bg) 55%, #0b0d18 100%);
+      color:var(--text);overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    }
+    .app{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+    header{padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .title{display:flex;align-items:center;gap:10px;min-width:0;}
+    .logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#ffcc66,#ff6bd6 45%,#6b8bff);box-shadow:var(--shadow);display:grid;place-items:center;font-size:22px;}
+    h1{margin:0;font-size:16px;}
+    .sub{margin:2px 0 0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;}
+    .pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 12px;font-weight:900;font-size:13px;box-shadow:0 10px 20px rgba(0,0,0,.15);display:flex;gap:8px;align-items:center;}
+    .btn{appearance:none;border:0;cursor:pointer;border-radius:999px;padding:10px 14px;font-weight:900;font-size:13px;color:var(--text);
+      background:linear-gradient(135deg,#6b8bff,#42e2ff);box-shadow:var(--shadow);user-select:none;}
+    .btn.secondary{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);}
+    .btn:active{transform:translateY(1px) scale(.99);}
+    main{flex:1;min-height:0;padding:0 14px 14px;display:flex;}
+    .panel{
+      width:100%;max-width:980px;margin:0 auto;
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden;
+    }
+    canvas{width:100%;height:100%;display:block;}
+    .centerTip{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);
+      padding:10px 14px;border-radius:999px;font-weight:900;font-size:13px;
+      pointer-events:none;opacity:.95;
+    }
+    .toast{
+      position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));
+      transform:translateX(-50%);background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.18);
+      padding:10px 14px;border-radius:999px;font-weight:900;font-size:13px;box-shadow:var(--shadow);
+      opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;max-width:calc(100% - 24px);text-align:center;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:18px;}
+    .overlay.show{display:flex;}
+    .modal{width:min(520px,100%);border-radius:22px;background:rgba(23,26,43,.95);border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow);padding:16px;}
+    .modal h2{margin:6px 0 6px;font-size:18px;}
+    .modal p{margin:0 0 12px;color:var(--muted);}
+    .modal .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="title">
+        <div class="logo">🎈</div>
+        <div style="min-width:0">
+          <h1>Balon Patlat</h1>
+          <div class="sub">Balonlara dokun ve patlat!</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" id="btnBack" type="button">⬅️ Menü</button>
+        <div class="pill">⭐ Puan: <span id="score">0</span></div>
+        <div class="pill">⏱️ Süre: <span id="time">30</span>s</div>
+        <button class="btn" id="btnStart" type="button">▶ Başla</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel" aria-label="Balon alanı">
+        <canvas id="c"></canvas>
+        <div class="centerTip" id="tip">Başla'ya bas 🎈</div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h2>🎉 Bitti!</h2>
+      <p id="endText">Skor</p>
+      <div class="row">
+        <button class="btn secondary" id="btnClose" type="button">Kapat</button>
+        <button class="btn" id="btnAgain" type="button">Tekrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btnBack = document.getElementById('btnBack');
+    btnBack.addEventListener('click', () => window.location.href = "../../index.html");
+
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+
+    const scoreEl = document.getElementById('score');
+    const timeEl  = document.getElementById('time');
+    const btnStart = document.getElementById('btnStart');
+    const tipEl = document.getElementById('tip');
+    const toastEl = document.getElementById('toast');
+    const overlay = document.getElementById('overlay');
+    const endText = document.getElementById('endText');
+    const btnAgain = document.getElementById('btnAgain');
+    const btnClose = document.getElementById('btnClose');
+
+    let w=0,h=0,dpr=1;
+    let balloons = [];
+    let pops = [];
+    let score = 0;
+    let running = false;
+    let tLeft = 30;
+    let tick = null;
+    let raf = null;
+
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toastEl.classList.remove('show'), 1100);
+    }
+
+    function resize(){
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.max(1, window.devicePixelRatio || 1);
+      w = rect.width; h = rect.height;
+      canvas.width = Math.floor(w*dpr);
+      canvas.height = Math.floor(h*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    window.addEventListener('resize', resize);
+
+    function rnd(min,max){ return Math.random()*(max-min)+min; }
+    function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+    const COLORS = ["#ff4757","#ffa502","#ffd32a","#2ed573","#1e90ff","#a55eea","#ff6bd6"];
+    function spawnBalloon(){
+      const r = rnd(28, 44);
+      balloons.push({
+        x: rnd(r+10, w-r-10),
+        y: h + r + 10,
+        r,
+        vy: rnd(35, 70), // px/s
+        c: choice(COLORS),
+        shine: rnd(.25,.5)
+      });
+    }
+
+    function startGame(){
+      overlay.classList.remove('show');
+      resize();
+      score = 0; tLeft = 30;
+      scoreEl.textContent = "0";
+      timeEl.textContent = String(tLeft);
+      balloons = []; pops = [];
+      running = true;
+      tipEl.style.display = "none";
+      btnStart.textContent = "⏸ Dur";
+      showToast("Başla! 🎈");
+
+      // initial balloons
+      for(let i=0;i<6;i++) spawnBalloon();
+
+      if(tick) clearInterval(tick);
+      tick = setInterval(()=>{
+        if(!running) return;
+        tLeft--;
+        timeEl.textContent = String(tLeft);
+        if(tLeft <= 0) endGame();
+      }, 1000);
+
+      let last = performance.now();
+      function loop(now){
+        const dt = Math.min(0.033, (now-last)/1000);
+        last = now;
+        update(dt);
+        draw();
+        raf = requestAnimationFrame(loop);
+      }
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
+    }
+
+    function pauseGame(){
+      running = false;
+      btnStart.textContent = "▶ Devam";
+      tipEl.textContent = "Devam'a bas 🙂";
+      tipEl.style.display = "block";
+    }
+    function resumeGame(){
+      running = true;
+      btnStart.textContent = "⏸ Dur";
+      tipEl.style.display = "none";
+    }
+
+    function endGame(){
+      running = false;
+      btnStart.textContent = "▶ Başla";
+      clearInterval(tick); tick = null;
+      cancelAnimationFrame(raf); raf = null;
+      endText.textContent = `Skorun: ${score} ⭐`;
+      overlay.classList.add('show');
+    }
+
+    function update(dt){
+      if(!running) return;
+
+      // spawn rate
+      if(balloons.length < 10 && Math.random() < 0.06) spawnBalloon();
+
+      for(const b of balloons){
+        b.y -= b.vy * dt;
+      }
+      balloons = balloons.filter(b => b.y + b.r > -20);
+
+      for(const p of pops){
+        p.t += dt;
+      }
+      pops = pops.filter(p => p.t < 0.35);
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+
+      // soft background sparkles
+      ctx.fillStyle = "rgba(255,255,255,.04)";
+      for(let i=0;i<18;i++){
+        const x = (i*97) % w;
+        const y = (i*53) % h;
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      // balloons
+      for(const b of balloons){
+        // string
+        ctx.strokeStyle = "rgba(255,255,255,.25)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(b.x, b.y + b.r);
+        ctx.quadraticCurveTo(b.x + 8, b.y + b.r + 24, b.x, b.y + b.r + 48);
+        ctx.stroke();
+
+        // balloon body
+        const g = ctx.createRadialGradient(b.x - b.r*0.35, b.y - b.r*0.35, 4, b.x, b.y, b.r);
+        g.addColorStop(0, "rgba(255,255,255,.55)");
+        g.addColorStop(b.shine, b.c);
+        g.addColorStop(1, "rgba(0,0,0,.12)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.ellipse(b.x, b.y, b.r*0.92, b.r, 0, 0, Math.PI*2);
+        ctx.fill();
+
+        // knot
+        ctx.fillStyle = "rgba(0,0,0,.18)";
+        ctx.beginPath();
+        ctx.moveTo(b.x, b.y + b.r*0.9);
+        ctx.lineTo(b.x-6, b.y + b.r*1.15);
+        ctx.lineTo(b.x+6, b.y + b.r*1.15);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // pops
+      for(const p of pops){
+        const k = p.t/0.35;
+        const alpha = 1-k;
+        ctx.strokeStyle = `rgba(255,255,255,${0.75*alpha})`;
+        ctx.lineWidth = 3;
+        for(let i=0;i<10;i++){
+          const ang = (i/10)*Math.PI*2;
+          const len = 12 + 26*k;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x + Math.cos(ang)*len, p.y + Math.sin(ang)*len);
+          ctx.stroke();
+        }
+      }
+
+      if(!running){
+        // paused overlay label is handled by tip
+      }
+    }
+
+    function popAt(x,y){
+      // hit test balloons from topmost
+      for(let i=balloons.length-1;i>=0;i--){
+        const b = balloons[i];
+        const dx = x-b.x, dy = y-b.y;
+        if(dx*dx + dy*dy <= b.r*b.r){
+          balloons.splice(i,1);
+          pops.push({x,y,t:0});
+          score += 1;
+          scoreEl.textContent = String(score);
+          showToast("Pop! 🎉");
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function getPoint(e){
+      const rect = canvas.getBoundingClientRect();
+      const p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      return { x: p.clientX - rect.left, y: p.clientY - rect.top };
+    }
+
+    canvas.addEventListener('pointerdown', (e)=>{
+      if(!raf && !running) return;
+      const pt = getPoint(e);
+      popAt(pt.x, pt.y);
+    }, {passive:true});
+
+    btnStart.addEventListener('click', ()=>{
+      if(!raf && !tick && !running && btnStart.textContent.includes("Başla")){
+        startGame();
+        return;
+      }
+      if(running) pauseGame();
+      else if(tLeft>0 && (raf || tick)) resumeGame();
+      else startGame();
+    });
+
+    btnAgain.addEventListener('click', startGame);
+    btnClose.addEventListener('click', ()=>overlay.classList.remove('show'));
+
+    resize();
+  </script>
+</body>
+</html>
 
