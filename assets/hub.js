@@ -53,7 +53,15 @@ const GAMES = [
     icon: "🍓",
     badge: "4+",
     url: "games/sort/index.html"
-  }
+  },
+  {
+  id: "yeni-oyun",
+  title: "Yeni Oyun",
+  desc: "Kısa açıklama",
+  icon: "🎯",
+  badge: "4+",
+  url: "games/yeni-oyun/index.html"
+}
   // Buraya yeni oyun ekledikçe bir obje daha ekleyeceksin.
 ];
 
@@ -111,3 +119,4 @@ btnSound.addEventListener("click", async () => {
 
 render();
 showToast("Bir oyun seç 🎮");
+
