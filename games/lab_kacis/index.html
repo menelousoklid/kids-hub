@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Maze Escape - Labirent Kaçış oyunu! Süre bitmeden çıkışı bul!">
+  <meta name="keywords" content="labirent,kaçış,zeka oyunu,Maze Escape">
+  <meta name="author" content="Game Developer">
+  <title>Maze Escape | Labirent Kaçış</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 游戏容器 -->
+  <div class="game-container">
+    <!-- 头部信息 -->
+    <header class="header">
+      <h1 class="title">🎯 Maze Escape</h1>
+      <p class="subtitle">Labirent Kaçış - Çıkışı bul, kazan!</p>
+    </header>
+
+    <!-- 游戏信息栏 -->
+    <div class="info-bar">
+      <div class="info-item">
+        <span class="info-label">Seviye</span>
+        <span class="info-value" id="level">1</span>
+<!-- Project: GameHub -->
+      </div>
+      <div class="info-item">
+        <span class="info-label">Adım</span>
+        <span class="info-value" id="steps">0</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Süre</span>
+        <span class="info-value" id="time">00:00</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">İpucu</span>
+        <span class="info-value" id="hintsLeft">3</span>
+      </div>
+    <!-- GameHub Project - https://github.com/SinceraXY/GameHub -->
+    </div>
+
+    <!-- 游戏区域 -->
+    <div class="game-area">
+      <canvas id="gameCanvas" width="600" height="600"></canvas>
+      <div class="game-overlay" id="gameOverlay">
+        <div class="overlay-message">Yön tuşları veya WASD ile hareket et</div>
+      </div>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls">
+      <button class="control-btn" id="resetBtn">
+        <span class="btn-icon">🔄</span>
+        <span class="btn-text">Sıfırla</span>
+      </button>
+      <button class="control-btn" id="hintBtn">
+        <span class="btn-icon">💡</span>
+        <span class="btn-text">İpucu</span>
+      </button>
+      <button class="control-btn" id="menuBtn">
+        <span class="btn-icon">🏠</span>
+        <span class="btn-text">Zorluk Seç</span>
+<!-- Contact: 2952671670@qq.com -->
+      </button>
+      <button class="control-btn" id="skipBtn">
+        <span class="btn-icon">⏭️</span>
+        <span class="btn-text">Sonraki Bölüm</span>
+      </button>
+    </div>
+
+    <!-- 移动按钮（移动端） -->
+    <div class="mobile-controls" id="mobileControls">
+      <div class="d-pad">
+        <button class="d-pad-btn up" data-dir="up">↑</button>
+        <button class="d-pad-btn left" data-dir="left">←</button>
+        <button class="d-pad-btn center">🎮</button>
+        <button class="d-pad-btn right" data-dir="right">→</button>
+        <button class="d-pad-btn down" data-dir="down">↓</button>
+      </div>
+    </div>
+
+    <!-- 游戏说明 -->
+    <details class="instructions">
+    <summary>🎮 Nasıl Oynanır?</summary>
+    <div class="instructions-content">
+      <h3>🎯 Oyun Hedefi</h3>
+      <p>Başlangıçtan (yeşil) bitişe (kırmızı) en az adımla ulaş!</p>
+      <h3>🎮 Kontroller</h3>
+      <p>Bilgisayar: Yön tuşları veya WASD | Telefon: Ekrandaki yön tuşları</p>
+    </div>
+  </details>
+</div>
+
+<!-- Başlangıç ekranı -->
+  <div id="startOverlay" class="overlay">
+    <div class="overlay-content">
+      <h2 class="overlay-title">🎯 Maze Escape</h2>
+      <p class="overlay-subtitle">Labirent meydan okumasına hazır mısın?</p>
+      <button class="primary-btn" id="startBtn">Oyunu Başlat</button>
+      <div class="level-select">
+
+<!-- Contact: 2952671670@qq.com -->
+
+        <h3>Zorluk Seç</h3>
+        <div class="difficulty-buttons">
+          <button class="difficulty-btn active" data-level="1">
+            <div class="diff-name">Kolay</div>
+            <div class="diff-desc">11×11 Labirent</div>
+          </button>
+          <button class="difficulty-btn" data-level="2">
+            <div class="diff-name">Orta</div>
+            <div class="diff-desc">15×15 Labirent</div>
+          </button>
+          <button class="difficulty-btn" data-level="3">
+            <div class="diff-name">Zor</div>
+            <div class="diff-desc">21×21 Labirent</div>
+    <!-- Developer: SinceraXY -->
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 胜利弹窗 -->
+  <div id="winModal" class="modal hidden">
+    <div class="modal-content win-modal">
+      <div class="modal-header">
+        <div class="trophy-icon">🏆</div>
+        <h2 id="winTitle" class="win-title">Tebrikler, geçtin!</h2>
+        <p class="win-subtitle">Bir labirentten daha başarıyla çıktın!</p>
+      </div>
+      <div class="modal-body">
+        <div class="win-stats">
+          <div class="stat-item">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-label">Seviye</span>
+            <span class="stat-value" id="winLevel">1</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">👣</span>
+            <span class="stat-label">Adım</span>
+            <span class="stat-value" id="winSteps">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-label">Süre</span>
+            <span class="stat-value" id="winTime">00:00</span>
+          </div>
+          <div class="stat-item" id="hintUsedCard">
+            <span class="stat-icon">💡</span>
+            <span class="stat-label">İpucu</span>
+            <span class="stat-value" id="winHintUsed">0 kez</span>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn primary" id="nextLevelBtn">
+            <span class="btn-icon">⏭️</span>
+            <span>Sonraki Bölüm</span>
+          </button>
+          <button class="modal-btn secondary" id="replayBtn">
+            <span class="btn-icon">🔄</span>
+            <span>Tekrar Oyna</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
