@@ -106,7 +106,7 @@ body {
 
 /* ==================== 游戏区域 ==================== */
 .game-area {
-      padding-bottom: 90px; /* space for mobile controls overlay */
+      padding-bottom: 10px;
   position: relative;
   background: linear-gradient(to bottom, #f5f7fa 0%, #c3cfe2 100%);
   border-radius: 15px;
@@ -636,7 +636,47 @@ body {
 
 /* ==================== 响应式设计 ==================== */
 @media (max-width: 768px) {
-  .game-container { padding: 12px; border-radius: 16px; }
+  .game-container { padding: 10px; border-radius: 16px; gap: 8px; }
+  header { margin-bottom: 6px; }
+  .title { font-size: 1.4rem; margin-bottom: 2px; }
+  .subtitle { font-size: 0.85rem; }
+
+  /* Top stats: 4 small cards in one row */
+  .info-bar {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .info-card { padding: 10px 8px; border-radius: 14px; }
+  .info-label { font-size: 0.8rem; margin-bottom: 4px; }
+  .info-value { font-size: 1.1rem; }
+
+  /* Action buttons: compact 2-column grid */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .control-btn { padding: 10px 10px; border-radius: 14px; font-size: 0.92rem; }
+  .control-btn span { font-size: 0.92rem; }
+
+  /* Mobile D-pad: in its own bottom section under the maze */
+  .mobile-controls {
+    display: flex;
+    position: static;
+    transform: none;
+    margin: 6px auto 0;
+    z-index: 1;
+    background: rgba(245, 247, 250, 0.95);
+    padding: 10px 12px;
+    border-radius: 18px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+    width: fit-content;
+  }
+  .direction-btn { width: 56px; height: 56px; border-radius: 16px; font-size: 22px; }
+  .center-btn { width: 56px; height: 56px; border-radius: 16px; }
+}
   .info-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
   .title { font-size: 1.7rem; }
   .subtitle { font-size: 0.92rem; }
@@ -770,7 +810,13 @@ body {
 
 /* Small-height screens: keep everything visible without scroll */
 @media (max-height: 700px) {
-  .mobile-controls { transform: translateX(-50%) scale(0.92); bottom: 8px; }
+  .subtitle { display: none; }
+  details.instructions { display: none; }
+  .controls { margin-bottom: 4px; }
+  .control-btn { padding: 8px 10px; }
+  .info-card { padding: 8px 6px; }
+  .direction-btn, .center-btn { width: 48px; height: 48px; }
+}
 
   .subtitle { display: none; }
   details.instructions { display: none; }
