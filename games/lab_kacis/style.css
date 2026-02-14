@@ -1,47 +1,34 @@
-/* ==================== Global Styles ==================== */
+/* ==================== 全局样式 ==================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden; /* no page scroll */
-}
-
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
-  margin: 0;
-  touch-action: manipulation;
+  padding: 20px;
 }
 
-/* ==================== Oyun Konteyneri ==================== */
+/* ==================== 游戏容器 ==================== */
 .game-container {
   background: white;
   border-radius: 20px;
-  padding: 16px;
-  width: min(900px, 100vw);
-  height: 100dvh;
-  max-height: 100dvh;
+  padding: 30px;
+  max-width: 800px;
+  width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
-
 
 /* ==================== 头部 ==================== */
 .header {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 
 .title {
@@ -64,7 +51,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 
 .info-item {
@@ -106,17 +93,15 @@ body {
 
 /* ==================== 游戏区域 ==================== */
 .game-area {
-      padding-bottom: 10px;
   position: relative;
   background: linear-gradient(to bottom, #f5f7fa 0%, #c3cfe2 100%);
   border-radius: 15px;
-  padding: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
   box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1 1 auto;
-  min-height: 0; /* allow flex child to shrink */
 }
 
 #gameCanvas {
@@ -125,8 +110,6 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   background: white;
   max-width: 100%;
-  max-height: 100%;
-  width: auto;
   height: auto;
 }
 
@@ -162,7 +145,7 @@ body {
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
   flex-wrap: wrap;
 }
 
@@ -210,7 +193,7 @@ body {
 .mobile-controls {
   display: none;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 
 .d-pad {
@@ -636,80 +619,9 @@ body {
 
 /* ==================== 响应式设计 ==================== */
 @media (max-width: 768px) {
-  .game-container { padding: 10px; border-radius: 16px; gap: 8px; }
-  header { margin-bottom: 6px; }
-  .title { font-size: 1.4rem; margin-bottom: 2px; }
-  .subtitle { font-size: 0.85rem; }
-
-  /* Top stats: 4 small cards in one row */
-  .info-bar {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 6px;
+  .game-container {
+    padding: 20px;
   }
-  .info-card { padding: 10px 8px; border-radius: 14px; }
-  .info-label { font-size: 0.8rem; margin-bottom: 4px; }
-  .info-value { font-size: 1.1rem; }
-
-  /* Action buttons: compact 2-column grid */
-  .controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-  .control-btn { padding: 10px 10px; border-radius: 14px; font-size: 0.92rem; }
-  .control-btn span { font-size: 0.92rem; }
-
-  /* Mobile D-pad: in its own bottom section under the maze */
-  .mobile-controls {
-    display: flex;
-    position: static;
-    transform: none;
-    margin: 6px auto 0;
-    z-index: 1;
-    background: rgba(245, 247, 250, 0.95);
-    padding: 10px 12px;
-    border-radius: 18px;
-    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-    width: fit-content;
-  }
-  .direction-btn { width: 56px; height: 56px; border-radius: 16px; font-size: 22px; }
-  .center-btn { width: 56px; height: 56px; border-radius: 16px; }
-}
-  .info-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
-  .title { font-size: 1.7rem; }
-  .subtitle { font-size: 0.92rem; }
-
-  /* Buttons take too much vertical space on phones -> 2-column grid */
-  .controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 8px;
-  }
-  .control-btn { padding: 10px 12px; border-radius: 16px; font-size: 0.95rem; }
-  .control-btn span { font-size: 0.95rem; }
-
-  /* Make maze visible: put mobile D-pad ON TOP of the maze (not below it) */
-  .mobile-controls {
-    display: flex;
-    position: absolute;
-    left: 50%;
-    bottom: 12px;
-    transform: translateX(-50%);
-    margin-top: 0;
-    z-index: 5;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 10px 12px;
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
-  }
-  .direction-btn { width: 54px; height: 54px; border-radius: 16px; font-size: 22px; }
-  .center-btn { width: 54px; height: 54px; border-radius: 16px; }
-}
 
   .title {
     font-size: 2rem;
@@ -797,42 +709,71 @@ body {
 }
 
 
-/* ==================== Responsive Tweaks ==================== */
+/* ==================== FIX PACK (Desktop + Mobile) ==================== */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  overflow: hidden; /* prevent page scroll */
+}
+
+/* Container fits viewport; internal layout handles space */
+.game-container {
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the play area can grow and canvas stays visible */
+.game-area {
+  flex: 1 1 auto;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Canvas never overflows its box */
+#gameCanvas {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+}
+
+/* Mobile D-pad lives in its own section under the maze */
+.mobile-controls {
+  display: none;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Compact mobile layout */
 @media (max-width: 768px) {
-  .info-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
-  .title { font-size: 1.8rem; }
-  .subtitle { font-size: 0.95rem; }
-  .info-value { font-size: 1.4rem; }
-  .controls { margin-bottom: 10px; }
-  .control-btn { padding: 10px 14px; border-radius: 18px; }
+  .subtitle { font-size: 0.9rem; }
+  .info-bar { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
+  .info-card { padding: 10px 8px; border-radius: 14px; }
+  .info-label { font-size: 0.78rem; }
+  .info-value { font-size: 1.05rem; }
+
+  /* Buttons in 2 columns */
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
   .mobile-controls { display: flex; }
 }
 
-/* Small-height screens: keep everything visible without scroll */
-@media (max-height: 700px) {
-  .subtitle { display: none; }
+/* Very short screens: hide extra help */
+@media (max-height: 720px) {
   details.instructions { display: none; }
-  .controls { margin-bottom: 4px; }
-  .control-btn { padding: 8px 10px; }
-  .info-card { padding: 8px 6px; }
-  .direction-btn, .center-btn { width: 48px; height: 48px; }
-}
-
-  .subtitle { display: none; }
-  details.instructions { display: none; }
-  .controls { margin-bottom: 8px; }
-}
-details.instructions {
-  background: linear-gradient(to right, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 10px 12px;
-  border-radius: 12px;
-}
-details.instructions summary {
-  cursor: pointer;
-  font-weight: 700;
-  color: #667eea;
-  outline: none;
-}
-details.instructions .instructions-content {
-  margin-top: 10px;
 }
