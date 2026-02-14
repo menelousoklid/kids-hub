@@ -1,34 +1,47 @@
-/* ==================== 全局样式 ==================== */
+/* ==================== Global Styles ==================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* no page scroll */
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 0;
+  margin: 0;
+  touch-action: manipulation;
 }
 
-/* ==================== 游戏容器 ==================== */
+/* ==================== Oyun Konteyneri ==================== */
 .game-container {
   background: white;
   border-radius: 20px;
-  padding: 30px;
-  max-width: 800px;
-  width: 100%;
+  padding: 16px;
+  width: min(900px, 100vw);
+  height: 100dvh;
+  max-height: 100dvh;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+
 
 /* ==================== 头部 ==================== */
 .header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .title {
@@ -51,7 +64,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .info-item {
@@ -96,12 +109,13 @@ body {
   position: relative;
   background: linear-gradient(to bottom, #f5f7fa 0%, #c3cfe2 100%);
   border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 25px;
+  padding: 10px;
   box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1 1 auto;
+  min-height: 0; /* allow flex child to shrink */
 }
 
 #gameCanvas {
@@ -110,6 +124,8 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   background: white;
   max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
 }
 
@@ -145,7 +161,7 @@ body {
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
@@ -193,7 +209,7 @@ body {
 .mobile-controls {
   display: none;
   justify-content: center;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .d-pad {
@@ -709,71 +725,34 @@ body {
 }
 
 
-/* ==================== FIX PACK (Desktop + Mobile) ==================== */
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  min-height: 100vh;
-  overflow: hidden; /* prevent page scroll */
-}
-
-/* Container fits viewport; internal layout handles space */
-.game-container {
-  height: 100vh;
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Ensure the play area can grow and canvas stays visible */
-.game-area {
-  flex: 1 1 auto;
-  min-height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-/* Canvas never overflows its box */
-#gameCanvas {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  display: block;
-}
-
-/* Mobile D-pad lives in its own section under the maze */
-.mobile-controls {
-  display: none;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-/* Compact mobile layout */
+/* ==================== Responsive Tweaks ==================== */
 @media (max-width: 768px) {
-  .subtitle { font-size: 0.9rem; }
-  .info-bar { grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
-  .info-card { padding: 10px 8px; border-radius: 14px; }
-  .info-label { font-size: 0.78rem; }
-  .info-value { font-size: 1.05rem; }
-
-  /* Buttons in 2 columns */
-  .controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-
+  .info-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+  .title { font-size: 1.8rem; }
+  .subtitle { font-size: 0.95rem; }
+  .info-value { font-size: 1.4rem; }
+  .controls { margin-bottom: 10px; }
+  .control-btn { padding: 10px 14px; border-radius: 18px; }
   .mobile-controls { display: flex; }
 }
 
-/* Very short screens: hide extra help */
-@media (max-height: 720px) {
+/* Small-height screens: keep everything visible without scroll */
+@media (max-height: 700px) {
+  .subtitle { display: none; }
   details.instructions { display: none; }
+  .controls { margin-bottom: 8px; }
+}
+details.instructions {
+  background: linear-gradient(to right, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+details.instructions summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #667eea;
+  outline: none;
+}
+details.instructions .instructions-content {
+  margin-top: 10px;
 }
