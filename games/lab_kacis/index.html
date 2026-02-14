@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Maze Escape - 迷宫逃脱游戏！在限时内找到出口！">
-  <meta name="keywords" content="迷宫,逃脱,益智游戏,Maze Escape">
+  <meta name="description" content="Maze Escape - Labirent Kaçış oyunu! Süre bitmeden çıkışı bul!">
+  <meta name="keywords" content="labirent,kaçış,zeka oyunu,Maze Escape">
   <meta name="author" content="Game Developer">
   <title>Maze Escape | Labirent Kaçış</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎯</text></svg>">
@@ -46,16 +46,6 @@
       <canvas id="gameCanvas" width="600" height="600"></canvas>
       <div class="game-overlay" id="gameOverlay">
         <div class="overlay-message">Yön tuşları veya WASD ile hareket et</div>
-
-<div class="mobile-controls" id="mobileControls">
-      <div class="d-pad">
-        <button class="d-pad-btn up" data-dir="up">↑</button>
-        <button class="d-pad-btn left" data-dir="left">←</button>
-        <button class="d-pad-btn center">🎮</button>
-        <button class="d-pad-btn right" data-dir="right">→</button>
-        <button class="d-pad-btn down" data-dir="down">↓</button>
-      </div>
-
       </div>
     </div>
 
@@ -81,20 +71,29 @@
     </div>
 
     <!-- 移动按钮（移动端） -->
-</div>
+    <div class="mobile-controls" id="mobileControls">
+      <div class="d-pad">
+        <button class="d-pad-btn up" data-dir="up">↑</button>
+        <button class="d-pad-btn left" data-dir="left">←</button>
+        <button class="d-pad-btn center">🎮</button>
+        <button class="d-pad-btn right" data-dir="right">→</button>
+        <button class="d-pad-btn down" data-dir="down">↓</button>
+      </div>
+    </div>
 
     <!-- 游戏说明 -->
     <details class="instructions">
-  <summary>🎮 Nasıl Oynanır?</summary>
-  <div class="instructions-content">
-    <p><b>Hedef:</b> Yeşil başlangıçtan kırmızı çıkışa ulaş.</p>
-    <p><b>Bilgisayar:</b> Yön tuşları veya WASD</p>
-    <p><b>Telefon:</b> Ekrandaki yön tuşları</p>
-  </div>
-</details>
-  </div>
+    <summary>🎮 Nasıl Oynanır?</summary>
+    <div class="instructions-content">
+      <h3>🎯 Oyun Hedefi</h3>
+      <p>Başlangıçtan (yeşil) bitişe (kırmızı) en az adımla ulaş!</p>
+      <h3>🎮 Kontroller</h3>
+      <p>Bilgisayar: Yön tuşları veya WASD | Telefon: Ekrandaki yön tuşları</p>
+    </div>
+  </details>
+</div>
 
-  <!-- 开始遮罩 -->
+<!-- Başlangıç ekranı -->
   <div id="startOverlay" class="overlay">
     <div class="overlay-content">
       <h2 class="overlay-title">🎯 Maze Escape</h2>
@@ -152,7 +151,7 @@
           <div class="stat-item" id="hintUsedCard">
             <span class="stat-icon">💡</span>
             <span class="stat-label">İpucu</span>
-            <span class="stat-value" id="winHintUsed">0次</span>
+            <span class="stat-value" id="winHintUsed">0 kez</span>
           </div>
         </div>
         <div class="modal-buttons">
@@ -162,7 +161,7 @@
           </button>
           <button class="modal-btn secondary" id="replayBtn">
             <span class="btn-icon">🔄</span>
-            <span>重玩</span>
+            <span>Tekrar Oyna</span>
           </button>
         </div>
       </div>
