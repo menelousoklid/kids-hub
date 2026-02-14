@@ -159,9 +159,9 @@ body {
 /* ==================== 控制按钮 ==================== */
 .controls {
   display: flex;
-  gap: 12px;
+  gap: 1px;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   flex-wrap: wrap;
 }
 
@@ -213,7 +213,7 @@ body {
 }
 
 .d-pad {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(3, 70px);
   grid-template-rows: repeat(3, 70px);
   gap: 5px;
@@ -651,7 +651,7 @@ body {
   }
 
   .info-bar {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
   }
 
@@ -673,7 +673,7 @@ body {
   }
 
   .mobile-controls {
-    display: flex;
+    display: grid;
   }
 
   .difficulty-buttons {
@@ -727,7 +727,7 @@ body {
 
 /* ==================== Responsive Tweaks ==================== */
 @media (max-width: 768px) {
-  .info-bar { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
+  .info-bar { grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
   .title { font-size: 1.8rem; }
   .subtitle { font-size: 0.95rem; }
   .info-value { font-size: 1.4rem; }
