@@ -69,8 +69,15 @@ const GAMES = [
   icon: "🟦",
   badge: "4+",
   url: "games/color-catch/index.html"
+},
+{
+  id: "lab_kacis",
+  title: "Labirentten Kaçış",
+  desc: "Labirentten kaçmak için yuvarlağı hareket ettir.",
+  icon: "🎯",
+  badge: "4+",
+  url: "games/lab_kacis/index.html"
 }
-
   // Buraya yeni oyun ekledikçe bir obje daha ekleyeceksin.
 ];
 
@@ -128,6 +135,7 @@ btnSound.addEventListener("click", async () => {
 
 render();
 showToast("Bir oyun seç 🎮");
+
 
 
 
