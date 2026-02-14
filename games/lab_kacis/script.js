@@ -75,9 +75,40 @@ class Particle {
 /* Author: SinceraXY | China University of Petroleum, Beijing */
 }
 
-// ==================== DOM Elemanları ====================
+// ==================== DOM 元素 ====================
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+
+// ===== Responsive Canvas Sizing (desktop + mobile) =====
+function fitCanvasToArea() {
+  const area = document.querySelector('.game-area');
+  if (!area) return;
+
+  const rect = area.getBoundingClientRect();
+  // Keep padding breathing room
+  const usable = Math.max(0, Math.min(rect.width, rect.height) - 16);
+  const cs = Math.max(12, Math.floor(usable / mazeSize));
+
+  CONFIG.cellSize = cs;
+  const total = mazeSize * CONFIG.cellSize;
+
+  canvas.width = total;
+  canvas.height = total;
+
+  drawMaze();
+}
+
+// Observe size changes (orientation / address bar / resize)
+const areaEl = document.querySelector('.game-area');
+if (areaEl && 'ResizeObserver' in window) {
+  const ro = new ResizeObserver(() => {
+    if (gameActive) fitCanvasToArea();
+  });
+  ro.observe(areaEl);
+} else {
+  window.addEventListener('resize', () => { if (gameActive) fitCanvasToArea(); });
+}
+
 
 const startOverlay = document.getElementById('startOverlay');
 const winModal = document.getElementById('winModal');
@@ -96,12 +127,11 @@ const stepsDisplay = document.getElementById('steps');
 const timeDisplay = document.getElementById('time');
 const bestStepsDisplay = document.getElementById('bestSteps');
 
-// ==================== Başlatma ====================
+// ==================== 初始化 ====================
 function init() {
   loadProgress();
   setupEventListeners();
   setupMobileControls();
-  window.addEventListener('resize', () => { if (gameActive) fitCanvasToViewport(); });
 }
 
 function setupEventListeners() {
@@ -243,6 +273,12 @@ function backToMenu() {
 function generateMaze() {
   // 初始化迷宫（全是墙）
   maze = Array(mazeSize).fill(null).map(() => Array(mazeSize).fill(1));
+  
+  // 调整迷宫大小为奇数，避免边界多余黑边
+  if (mazeSize % 2 === 0) {
+    mazeSize -= 1;
+  }
+  
   // 设置起点和终点
   startPos = { x: 0, y: 0 };
   endPos = { x: mazeSize - 1, y: mazeSize - 1 };
@@ -282,8 +318,8 @@ function generateMaze() {
   // 增加迷宫难度：添加死胡同作为干扰
   addDeadEnds();
   
-  // 设置画布大小（自适应屏幕）
-  fitCanvasToViewport();
+  // 设置画布大小（Responsive）
+  fitCanvasToArea();
 }
 
 function getUnvisitedNeighbors(pos) {
@@ -890,12 +926,12 @@ function win() {
   gameActive = false;
   stopTimer();
   
-  // Zafer penceresini göster
+  // 显示胜利弹窗
   const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
   document.getElementById('winLevel').textContent = currentLevel;
   document.getElementById('winSteps').textContent = steps;
   document.getElementById('winTime').textContent = formatTime(elapsedTime);
-  document.getElementById('winHintUsed').textContent = `${hintsUsed} kez`;
+  document.getElementById('winHintUsed').textContent = `${hintsUsed}次`;
   
   playSound('win');
   openModal(winModal);
@@ -1072,25 +1108,4 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ==================== 启动 ====================
-window.addEventListener('load', init);// ==================== Responsive Canvas ====================
-function computeCellSize() {
-  const area = document.querySelector('.game-area');
-  if (!area) return 30;
-
-  // game-area padding is defined in CSS; use inner size
-  const rect = area.getBoundingClientRect();
-  // leave a little breathing room to prevent accidental overflow
-  const usable = Math.max(0, Math.min(rect.width, rect.height) - 12);
-  const cs = Math.floor(usable / mazeSize);
-  return Math.max(12, cs); // minimum for visibility on small screens
-}
-
-function fitCanvasToViewport() {
-  CONFIG.cellSize = computeCellSize();
-  const totalSize = mazeSize * CONFIG.cellSize;
-  canvas.width = totalSize;
-  canvas.height = totalSize;
-  drawMaze();
-}
-
-
+window.addEventListener('load', init);
